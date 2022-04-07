@@ -23,6 +23,35 @@ public class MainController : MonoBehaviour
             objectPos.z = 0f;
             var p = Instantiate(PointPrefab, objectPos, Quaternion.identity);
             CurrentPoints.Add(p.GetComponent<Point>());
+
+            if (CurrentPoints.Count == 3)
+            {
+                DrawShapes();
+            }
         }
+    }
+
+    public void DrawShapes()
+    {
+
+    }
+
+    public void ResetShapes()
+    {
+        var tempList = CurrentPoints.ToArray();
+
+        for (int i = 0; i < tempList.Length; i++)
+        {
+            Destroy(tempList[i].gameObject);
+        }
+
+        CurrentPoints.Clear();
+
+        //Add code to remove shapes
+    }
+
+    public void ShowAbout()
+    {
+
     }
 }
