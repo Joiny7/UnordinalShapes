@@ -7,6 +7,9 @@ public class MainController : MonoBehaviour
     [SerializeField]
     private GameObject PointPrefab;
 
+    [SerializeField]
+    private GameObject AboutText;
+
     private List<Point> CurrentPoints = new List<Point>();
 
     void Update()
@@ -52,6 +55,9 @@ public class MainController : MonoBehaviour
 
     public void ShowAbout()
     {
-
+        if (AboutText.activeInHierarchy)
+            AboutText.SetActive(false);
+        else
+            AboutText.SetActive(true);
     }
 }
