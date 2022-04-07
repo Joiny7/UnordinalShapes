@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class MainController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private GameObject PointPrefab;
 
-    // Update is called once per frame
+    private List<Point> CurrentPoints = new List<Point>();
+
     void Update()
     {
-        
+        CheckForClicks();
+    }
+
+    private void CheckForClicks()
+    {
+        if (Input.GetButtonDown("Fire1") && CurrentPoints.Count < 3)
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePosition);
+            objectPos.z = 0f;
+            var p = Instantiate(PointPrefab, objectPos, Quaternion.identity);
+            CurrentPoints.Add(p.GetComponent<Point>());
+        }
     }
 }
