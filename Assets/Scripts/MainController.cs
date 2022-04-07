@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MainController : MonoBehaviour
@@ -10,11 +11,25 @@ public class MainController : MonoBehaviour
     [SerializeField]
     private GameObject AboutText;
 
+    [SerializeField]
+    private LineRenderer LineRenderer;
+
     private List<Point> CurrentPoints = new List<Point>();
 
     void Update()
     {
         CheckForClicks();
+    }
+
+    private void Start()
+    {
+        Setup();
+    }
+
+    private void Setup()
+    {
+        LineRenderer.startWidth = 0.3f;
+        LineRenderer.endWidth = 0.3f;
     }
 
     private void CheckForClicks()
@@ -36,7 +51,17 @@ public class MainController : MonoBehaviour
 
     public void DrawShapes()
     {
+        LineRenderer.positionCount = 3;
+        Vector3[] positions = new Vector3[3];
 
+        for (int i = 0; i < CurrentPoints.Count; i++)
+        {
+            positions[i] = CurrentPoints[i].transform.position;
+        }
+
+        LineRenderer.SetPositions(positions);
+        LineRenderer.startColor = Color.blue;
+        LineRenderer.endColor = Color.blue;
     }
 
     public void ResetShapes()
@@ -50,7 +75,7 @@ public class MainController : MonoBehaviour
 
         CurrentPoints.Clear();
 
-        //Add code to remove shapes
+        LineRenderer.positionCount = 0;
     }
 
     public void ShowAbout()
