@@ -14,6 +14,9 @@ public class MainController : MonoBehaviour
     [SerializeField]
     private LineRenderer LineRenderer;
 
+    [SerializeField]
+    private LineRenderer CircleRenderer;
+
     private List<Point> CurrentPoints = new List<Point>();
 
     void Update()
