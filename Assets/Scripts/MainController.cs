@@ -22,6 +22,7 @@ public class MainController : MonoBehaviour
     private LineRenderer CircleRenderer;
 
     private List<Point> CurrentPoints = new List<Point>();
+    //private GameObject PhantomPoint = null;
     private float CircleArea = 0;
     private float ParallelogramArea = 0;
 
@@ -129,16 +130,26 @@ public class MainController : MonoBehaviour
     private void DrawParallelogram()
     {
         //old version
-        LineRenderer.positionCount = 3;
-        Vector3[] positions = new Vector3[3];
+        LineRenderer.positionCount = 4;
+        Vector3[] positions = new Vector3[4];
 
         for (int i = 0; i < CurrentPoints.Count; i++)
         {
             positions[i] = CurrentPoints[i].transform.position;
         }
 
+        positions[3] = GetPhantomPoint();
         LineRenderer.SetPositions(positions);
 
+    }
+
+    private Vector3 GetPhantomPoint()
+    {
+        //minor fancy math magic
+        float x = (CurrentPoints[0].transform.position.x - CurrentPoints[1].transform.position.x + CurrentPoints[2].transform.position.x);
+        float y = (CurrentPoints[0].transform.position.y - CurrentPoints[1].transform.position.y + CurrentPoints[2].transform.position.y);
+        Vector3 v = new Vector3(x, y, 0);
+        return v;
     }
 
     private void DrawCircle()
