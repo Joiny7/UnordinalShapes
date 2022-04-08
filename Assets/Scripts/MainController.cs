@@ -37,24 +37,36 @@ public class MainController : MonoBehaviour
 
     private void Setup()
     {
-        LineRenderer.startWidth = 0.3f;
-        LineRenderer.endWidth = 0.3f;
+        LineRenderer.startWidth = 0.1f;
+        LineRenderer.endWidth = 0.1f;
         LineRenderer.startColor = Color.blue;
         LineRenderer.endColor = Color.blue;
 
-        CircleRenderer.startWidth = 0.3f;
-        CircleRenderer.endWidth = 0.3f;
+        CircleRenderer.startWidth = 0.1f;
+        CircleRenderer.endWidth = 0.1f;
         CircleRenderer.startColor = Color.yellow;
         CircleRenderer.endColor = Color.yellow;
     }
 
+    private bool PointHere2(Vector3 pos)
+    {
+        Vector2 v = new Vector2(pos.x, pos.y);
+        RaycastHit2D hit = Physics2D.Raycast(v, Vector2.zero);
+
+        if (hit.collider == null)
+            return false;
+        else 
+            return true;
+    }
+
     private void CheckForClicks()
     {
-        if (Input.GetButtonDown("Fire1") && CurrentPoints.Count < 3)
+        Vector3 mousePosition = Input.mousePosition;
+        Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePosition);
+        objectPos.z = 0f;
+
+        if (Input.GetButtonDown("Fire1") && !PointHere2(objectPos) && CurrentPoints.Count < 3)
         {
-            Vector3 mousePosition = Input.mousePosition;
-            Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePosition);
-            objectPos.z = 0f;
             var p = Instantiate(PointPrefab, objectPos, Quaternion.identity);
             CurrentPoints.Add(p.GetComponent<Point>());
 
@@ -95,12 +107,23 @@ public class MainController : MonoBehaviour
         CircleArea = 1f;
     }
 
-    public void DrawShapes()
+    private void DrawShapes()
     {
         DrawParallelogram();
         DrawCircle();
         CalculateParralelogramArea();
         CalculateCircleArea();
+    }
+
+    public void ReDrawShapes()
+    {
+        if(CurrentPoints.Count == 3)
+        {
+            DrawParallelogram();
+            DrawCircle();
+            CalculateParralelogramArea();
+            CalculateCircleArea();
+        }
     }
 
     private void DrawParallelogram()

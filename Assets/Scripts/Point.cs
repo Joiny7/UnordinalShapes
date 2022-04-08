@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Point : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Vector2 PreviousPosition;
+    private MainController Main;
+
+    private void Start()
     {
-        
+        PreviousPosition = transform.position;
+        Main = FindObjectOfType<MainController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnMouseDrag()
     {
-        
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        transform.position = mousePos;
+        Main.ReDrawShapes();
     }
 }
