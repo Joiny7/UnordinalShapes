@@ -100,7 +100,10 @@ public class MainController : MonoBehaviour
 
     private void CalculateParralelogramArea()
     {
-        ParallelogramArea = 1f;
+        var p = GetPhantomPoint();
+        float bottom = CurrentPoints[2].transform.position.x - p.x;
+        float height = CurrentPoints[0].transform.position.y - p.y;
+        ParallelogramArea = bottom * height;
     }
 
     private void CalculateCircleArea()
@@ -125,6 +128,8 @@ public class MainController : MonoBehaviour
             CalculateParralelogramArea();
             CalculateCircleArea();
         }
+
+        PrintPositionalData();
     }
 
     private void DrawParallelogram()
@@ -145,7 +150,7 @@ public class MainController : MonoBehaviour
 
     private Vector3 GetPhantomPoint()
     {
-        //minor fancy math magic
+        //minor math magic
         float x = (CurrentPoints[0].transform.position.x - CurrentPoints[1].transform.position.x + CurrentPoints[2].transform.position.x);
         float y = (CurrentPoints[0].transform.position.y - CurrentPoints[1].transform.position.y + CurrentPoints[2].transform.position.y);
         Vector3 v = new Vector3(x, y, 0);
