@@ -100,10 +100,17 @@ public class MainController : MonoBehaviour
 
     private void CalculateParralelogramArea()
     {
-        var p = GetPhantomPoint();
-        float bottom = CurrentPoints[2].transform.position.x - p.x;
-        float height = CurrentPoints[0].transform.position.y - p.y;
-        ParallelogramArea = bottom * height;
+        var f = CalculateAngleForParallelogram();
+        var dist1 = Vector3.Distance(CurrentPoints[0].transform.position, CurrentPoints[1].transform.position);
+        var dist2 = Vector3.Distance(CurrentPoints[1].transform.position, CurrentPoints[2].transform.position);
+        var sin = Mathf.Sin(f * Mathf.Deg2Rad);
+        ParallelogramArea = (dist1 * dist2 * sin);
+    }
+
+    private float CalculateAngleForParallelogram()
+    {
+        float angle = Vector3.Angle(CurrentPoints[1].transform.position - CurrentPoints[0].transform.position, CurrentPoints[1].transform.position - CurrentPoints[2].transform.position);
+        return angle;
     }
 
     private void CalculateCircleArea()
@@ -159,7 +166,20 @@ public class MainController : MonoBehaviour
 
     private void DrawCircle()
     {
+        Vector3 center = FindCircleCenter();
 
+
+
+
+    }
+
+    private Vector3 FindCircleCenter()
+    {
+        var x = (CurrentPoints[0].transform.position.x + CurrentPoints[2].transform.position.x) / 2;
+        var y = (CurrentPoints[1].transform.position.y + GetPhantomPoint().y) / 2;
+
+        Vector3 v = new Vector3(x, y);
+        return v;
     }
 
     public void ResetShapes()
