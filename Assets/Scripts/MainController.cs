@@ -22,7 +22,6 @@ public class MainController : MonoBehaviour
     private LineRenderer CircleRenderer;
 
     private List<Point> CurrentPoints = new List<Point>();
-    //private GameObject PhantomPoint = null;
     private float Area = 0;
 
     void Update()
@@ -47,6 +46,7 @@ public class MainController : MonoBehaviour
         CircleRenderer.endWidth = 0.05f;
     }
 
+    //To help check so that you dont spawn point when trying to drag a point
     private bool PointHere2(Vector3 pos)
     {
         Vector2 v = new Vector2(pos.x, pos.y);
@@ -96,7 +96,8 @@ public class MainController : MonoBehaviour
         PositionalData.text = s;
     }
 
-    private void CalculateParralelogramArea()
+    //Calculates area from the parallelogram, which we then use for creating the circle
+    private void CalculateArea()
     {
         var f = CalculateAngleForParallelogram();
         var dist1 = Vector3.Distance(CurrentPoints[0].transform.position, CurrentPoints[1].transform.position);
@@ -114,17 +115,18 @@ public class MainController : MonoBehaviour
     private void DrawShapes()
     {
         DrawParallelogram();
-        CalculateParralelogramArea();
+        CalculateArea();
         DrawCircle();
     }
 
+    //Different from DrawShapes only in that it's used for updating when moving points
     public void ReDrawShapes()
     {
         if(CurrentPoints.Count == 3)
         {
             DrawParallelogram();
             DrawCircle();
-            CalculateParralelogramArea();
+            CalculateArea();
         }
 
         PrintPositionalData();
@@ -132,7 +134,6 @@ public class MainController : MonoBehaviour
 
     private void DrawParallelogram()
     {
-        //old version
         LineRenderer.positionCount = 4;
         Vector3[] positions = new Vector3[4];
 
@@ -148,7 +149,6 @@ public class MainController : MonoBehaviour
 
     private Vector3 GetPhantomPoint()
     {
-        //minor math magic
         float x = (CurrentPoints[0].transform.position.x - CurrentPoints[1].transform.position.x + CurrentPoints[2].transform.position.x);
         float y = (CurrentPoints[0].transform.position.y - CurrentPoints[1].transform.position.y + CurrentPoints[2].transform.position.y);
         Vector3 v = new Vector3(x, y, 0);
@@ -157,10 +157,10 @@ public class MainController : MonoBehaviour
 
     private void DrawCircle()
     {
+        //vertexNumber is hardcoded only for simplicity
         int vertexNumber = 60;
         Vector3 center = FindCircleCenter();
         float radius = Mathf.Sqrt((Area / Mathf.PI));
-
         float angle = 2 * Mathf.PI / vertexNumber;
         CircleRenderer.positionCount = vertexNumber;
 
@@ -172,7 +172,6 @@ public class MainController : MonoBehaviour
                                        new Vector4(0, 0, 0, 1));
             Vector3 initialRelativePosition = new Vector3(0, radius, 0);
             CircleRenderer.SetPosition(i, center + rotationMatrix.MultiplyPoint(initialRelativePosition));
-
         }
     }
 
@@ -180,7 +179,6 @@ public class MainController : MonoBehaviour
     {
         var x = (CurrentPoints[0].transform.position.x + CurrentPoints[2].transform.position.x) / 2;
         var y = (CurrentPoints[1].transform.position.y + GetPhantomPoint().y) / 2;
-
         Vector3 v = new Vector3(x, y);
         return v;
     }
