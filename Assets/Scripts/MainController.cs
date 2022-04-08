@@ -23,8 +23,7 @@ public class MainController : MonoBehaviour
 
     private List<Point> CurrentPoints = new List<Point>();
     //private GameObject PhantomPoint = null;
-    private float CircleArea = 0;
-    private float ParallelogramArea = 0;
+    private float Area = 0;
 
     void Update()
     {
@@ -42,11 +41,10 @@ public class MainController : MonoBehaviour
         LineRenderer.endWidth = 0.05f;
         LineRenderer.startColor = Color.blue;
         LineRenderer.endColor = Color.blue;
-
-        CircleRenderer.startWidth = 0.1f;
-        CircleRenderer.endWidth = 0.1f;
         CircleRenderer.startColor = Color.yellow;
         CircleRenderer.endColor = Color.yellow;
+        CircleRenderer.startWidth = 0.05f;
+        CircleRenderer.endWidth = 0.05f;
     }
 
     private bool PointHere2(Vector3 pos)
@@ -91,8 +89,8 @@ public class MainController : MonoBehaviour
 
         if (CurrentPoints.Count == 3)
         {
-            s += "Parallelogram area: " + ParallelogramArea + "\n";
-            s += "Circle area: " + CircleArea + "\n";
+            s += "Parallelogram area: " + Area + "\n";
+            s += "Circle area: " + Area + "\n";
         }
 
         PositionalData.text = s;
@@ -104,7 +102,7 @@ public class MainController : MonoBehaviour
         var dist1 = Vector3.Distance(CurrentPoints[0].transform.position, CurrentPoints[1].transform.position);
         var dist2 = Vector3.Distance(CurrentPoints[1].transform.position, CurrentPoints[2].transform.position);
         var sin = Mathf.Sin(f * Mathf.Deg2Rad);
-        ParallelogramArea = (dist1 * dist2 * sin);
+        Area = (dist1 * dist2 * sin);
     }
 
     private float CalculateAngleForParallelogram()
@@ -113,17 +111,11 @@ public class MainController : MonoBehaviour
         return angle;
     }
 
-    private void CalculateCircleArea()
-    {
-        CircleArea = 1f;
-    }
-
     private void DrawShapes()
     {
         DrawParallelogram();
-        DrawCircle();
         CalculateParralelogramArea();
-        CalculateCircleArea();
+        DrawCircle();
     }
 
     public void ReDrawShapes()
@@ -133,7 +125,6 @@ public class MainController : MonoBehaviour
             DrawParallelogram();
             DrawCircle();
             CalculateParralelogramArea();
-            CalculateCircleArea();
         }
 
         PrintPositionalData();
@@ -166,11 +157,23 @@ public class MainController : MonoBehaviour
 
     private void DrawCircle()
     {
+        int vertexNumber = 60;
         Vector3 center = FindCircleCenter();
+        float radius = Mathf.Sqrt((Area / Mathf.PI));
 
+        float angle = 2 * Mathf.PI / vertexNumber;
+        CircleRenderer.positionCount = vertexNumber;
 
+        for (int i = 0; i < vertexNumber; i++)
+        {
+            Matrix4x4 rotationMatrix = new Matrix4x4(new Vector4(Mathf.Cos(angle * i), Mathf.Sin(angle * i), 0, 0),
+                                                     new Vector4(-1 * Mathf.Sin(angle * i), Mathf.Cos(angle * i), 0, 0),
+                                       new Vector4(0, 0, 1, 0),
+                                       new Vector4(0, 0, 0, 1));
+            Vector3 initialRelativePosition = new Vector3(0, radius, 0);
+            CircleRenderer.SetPosition(i, center + rotationMatrix.MultiplyPoint(initialRelativePosition));
 
-
+        }
     }
 
     private Vector3 FindCircleCenter()
