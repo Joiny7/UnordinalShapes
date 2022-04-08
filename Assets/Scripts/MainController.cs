@@ -22,6 +22,8 @@ public class MainController : MonoBehaviour
     private LineRenderer CircleRenderer;
 
     private List<Point> CurrentPoints = new List<Point>();
+    private float CircleArea = 0;
+    private float ParallelogramArea = 0;
 
     void Update()
     {
@@ -76,25 +78,34 @@ public class MainController : MonoBehaviour
 
         if (CurrentPoints.Count == 3)
         {
-            s += "Parallelogram area: " + CalculateParralelogramArea() + "\n";
-            s += "Circle area: " + CalculateCircleArea() + "\n";
+            s += "Parallelogram area: " + ParallelogramArea + "\n";
+            s += "Circle area: " + CircleArea + "\n";
         }
 
         PositionalData.text = s;
     }
 
-    private float CalculateParralelogramArea()
+    private void CalculateParralelogramArea()
     {
-        return 1f;
+        ParallelogramArea = 1f;
     }
 
-    private float CalculateCircleArea()
+    private void CalculateCircleArea()
     {
-        return 1f;
+        CircleArea = 1f;
     }
 
     public void DrawShapes()
     {
+        DrawParallelogram();
+        DrawCircle();
+        CalculateParralelogramArea();
+        CalculateCircleArea();
+    }
+
+    private void DrawParallelogram()
+    {
+        //old version
         LineRenderer.positionCount = 3;
         Vector3[] positions = new Vector3[3];
 
@@ -104,6 +115,12 @@ public class MainController : MonoBehaviour
         }
 
         LineRenderer.SetPositions(positions);
+
+    }
+
+    private void DrawCircle()
+    {
+
     }
 
     public void ResetShapes()
