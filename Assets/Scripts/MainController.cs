@@ -37,8 +37,8 @@ public class MainController : MonoBehaviour
 
     private void Setup()
     {
-        LineRenderer.startWidth = 0.1f;
-        LineRenderer.endWidth = 0.1f;
+        LineRenderer.startWidth = 0.05f;
+        LineRenderer.endWidth = 0.05f;
         LineRenderer.startColor = Color.blue;
         LineRenderer.endColor = Color.blue;
 
