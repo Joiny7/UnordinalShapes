@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainController : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class MainController : MonoBehaviour
 
     [SerializeField]
     private GameObject AboutText;
+
+    [SerializeField]
+    private Text PositionalData;
 
     [SerializeField]
     private LineRenderer LineRenderer;
@@ -33,6 +37,13 @@ public class MainController : MonoBehaviour
     {
         LineRenderer.startWidth = 0.3f;
         LineRenderer.endWidth = 0.3f;
+        LineRenderer.startColor = Color.blue;
+        LineRenderer.endColor = Color.blue;
+
+        CircleRenderer.startWidth = 0.3f;
+        CircleRenderer.endWidth = 0.3f;
+        CircleRenderer.startColor = Color.yellow;
+        CircleRenderer.endColor = Color.yellow;
     }
 
     private void CheckForClicks()
@@ -49,7 +60,37 @@ public class MainController : MonoBehaviour
             {
                 DrawShapes();
             }
+
+            PrintPositionalData();
         }
+    }
+
+    public void PrintPositionalData()
+    {
+        string s = "";
+
+        for (int i = 0; i < CurrentPoints.Count; i++)
+        {
+            s += "Point " + (i + 1) + " position: " + CurrentPoints[i].transform.position.ToString() + "\n";
+        }
+
+        if (CurrentPoints.Count == 3)
+        {
+            s += "Parallelogram area: " + CalculateParralelogramArea() + "\n";
+            s += "Circle area: " + CalculateCircleArea() + "\n";
+        }
+
+        PositionalData.text = s;
+    }
+
+    private float CalculateParralelogramArea()
+    {
+        return 1f;
+    }
+
+    private float CalculateCircleArea()
+    {
+        return 1f;
     }
 
     public void DrawShapes()
@@ -63,8 +104,6 @@ public class MainController : MonoBehaviour
         }
 
         LineRenderer.SetPositions(positions);
-        LineRenderer.startColor = Color.blue;
-        LineRenderer.endColor = Color.blue;
     }
 
     public void ResetShapes()
@@ -77,8 +116,8 @@ public class MainController : MonoBehaviour
         }
 
         CurrentPoints.Clear();
-
         LineRenderer.positionCount = 0;
+        PrintPositionalData();
     }
 
     public void ShowAbout()
